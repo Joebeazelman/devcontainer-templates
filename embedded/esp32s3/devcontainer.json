@@ -1,0 +1,57 @@
+{
+  "name": "Ada + ESP32-S3 Development",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".",
+    "args": {
+      "BUILDKIT_INLINE_CACHE": "1",
+      "ESP_IDF_VERSION": "v6.0.2",
+      "INSTALL_QEMU": "false"
+    }
+  },
+
+  "forwardPorts": [],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "AdaCore.ada",
+        "ms-vscode.cpptools-extension-pack",
+        "espressif.esp-idf-extension"
+      ],
+      "settings": {
+        "files.eol": "\n",
+        "editor.formatOnSave": true,
+        "[ada]": {
+          "editor.defaultFormatter": "AdaCore.ada"
+        },
+        "idf.espIdfPath": "/opt/esp/esp-idf",
+        "idf.toolsPath": "/opt/esp/tools",
+        "idf.pythonBinPath": "/usr/bin/python3"
+      }
+    }
+  },
+  "postCreateCommand": "alr version && esptool.py version && idf_monitor --version 2>/dev/null || true && echo 'Ada + ESP32-S3 development environment ready'",
+  "containerEnv": {
+    "IDF_PATH": "/opt/esp/esp-idf",
+    "IDF_TOOLS_PATH": "/opt/esp/tools",
+    "ESP_DEVICE": "/dev/ttyUSB0"
+  },
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined",
+    "--device=/dev/ttyUSB0",
+    "--device=/dev/ttyUSB1",
+    "--device=/dev/ttyACM0"
+  ],
+  "mounts": [
+    "type=bind,source=/dev/bus/usb,target=/dev/bus/usb"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/ohmyzsh:0": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/git:1": {}
+  }
+}
